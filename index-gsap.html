@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <title>Document</title>
+</head>
+<body>
+  <h1 class="page-heading">SVG Leaflet Maker</h1>
+  <div id="App" class="App">
+      <div class="page-elements">
+        <h3>Page Elements</h3>
+        <ul class="composition-components">
+          <li class="img1-wrap"><div data-component="img1" class="composition-component img1"></div></li>
+          <li class="img2-wrap"><div data-component="img2" class="composition-component img2"></div></li>
+          <li class="text-wrap"><p data-component="text" class="composition-component text" contenteditable="true">TEXT</p></li>
+        </ul>
+      </div>
+      <div class="grid"></div>
+      <div class="buttons-wrap">
+        <button class="btn btn-red clear-design">Clear</button>
+        <button class="btn btn-green export-design">Export</button>
+      </div>
+  </div>
+  <script src="js/vendor/gsap/gsap.min.js"></script>
+  <script src="js/vendor/gsap/EasePack.min.js"></script>
+  <script src="js/vendor/gsap/Draggable.min.js"></script>
+
+  
+
+  <script>
+    (function(w,d){
+      const $ = (element) => d.querySelectorAll(element),
+          $grid = $(".grid")[0],
+          compositionComponents = $('.composition-components')[0];
+
+      var grid_pos = $grid.getBoundingClientRect();
+
+      let state = {
+        snapping: false // by default do not snap 
+      }
+
+      function setElementSelection(target){
+        if(target.classList.contains("design-element")){
+          try { $('.selected-element')[0].classList.remove('selected-element')}
+          catch (e) {}
+          target.classList.add('selected-element');
+        }
+      }
+
+      function addElement($elem, elem, $parent, elem_type){
+        let newElement = document.createElement(elem_type),
+            classNames = $elem.getAttribute('class'),
+            data_attr = $elem.getAttribute('data-component');
+
+        if(elem_type === 'p'){
+          newElement.setAttribute('contenteditable', 'true');
+          newElement.innerHTML = 'TEXT';
+        }
+
+        newElement.setAttribute('class',classNames);
+        newElement.setAttribute('data-component',data_attr);
+
+        $parent.appendChild(newElement);
+
+        //create the draggable instance for the new element
+        createDraggable(newElement, elem, $parent, elem_type);
+        //update the ID number
+        //currentID++;
+      }
+
+      function createDraggable($elem, elem, $parent, elem_type){
+        Draggable.create($elem, {
+          // bounds: grid,
+          // onDrag: onDrag,
+          onDrag: function (){
+            if(this.target.classList.contains('selected-element')){
+              return;
+            }
+            setElementSelection(this.target);
+          },
+          onClick: function (){
+            setElementSelection(this.target);
+          },
+          onDragStart:function() {
+            //TweenMax.to(this.target, .2, {opacity:1});
+            //add just one element
+            if(!this.target.classList.contains("design-element")){
+                // Adding a new Element + making origional one resizable 
+                addElement($elem, elem, $parent, elem_type);
+                createResizeable($elem);
+                //this.applyBounds($grid);
+                
+                this.target.classList.add("design-element");
+            }
+          }
+        })
+      }
+
+      // function onDrag() {
+      //   console.log('ondrag');
+        
+      //     // gsap.to(elem, 0.5, {
+      //     //     //x: Math.round(this.x / snap) * snap,
+      //     //     //y: Math.round(this.y / snap) * snap,
+      //     //     //ease: Back.easeOut.config(2)
+      //     //     border: '1px solid dashed'
+      //     // }, () => {
+      //     //   $(".selected-element")[0].classList.remove('selected-element');
+      //     //   elem.classList.add('selected-element')
+      //     // });   
+      // }
+
+      function createResizeable($elem) {
+      
+        var handle = document.createElement("div");
+        handle.className = "resize-handle";
+        $elem.appendChild(handle);
+        
+
+        Draggable.create(handle, {
+          bounds: '.grid',
+          onDrag: function() {    
+            console.log(this.x)  
+            gsap.to($elem, { transformOrigin: 'right bottom', width: this.x-350, height: this.x-350, duration:0.1 });      
+          }
+        });  
+      }
+
+      function setCompositionComponents(elem, elem_type){
+        let $elem =  $(`.${elem}`)[0];
+
+        createDraggable($elem, elem, $elem.parentNode,elem_type);
+      }
+
+      setCompositionComponents('img1', 'div');
+      setCompositionComponents('img2', 'div');
+      setCompositionComponents('text', 'p');
+
+
+      function handleKeyboard(e){
+        switch(e.which) {
+          case 8:
+          case 46: 
+              // Use backspace to delete an element
+              try { 
+                let se = $('.selected-element')[0]
+                se.parentNode.removeChild(se)
+              }
+              catch(e){ 
+                // Nothing to delete 
+              }
+              break;
+        }
+      }
+
+
+      // To Delete the Selected Element 
+      document.addEventListener('keyup', handleKeyboard);
+      
+      // To Clear/Export The Designs
+      $('.clear-design')[0].addEventListener('click', function(){
+        $('.design-element').forEach(elem => elem.remove());
+      });
+      $('.export-design')[0].addEventListener('click', function(){
+        var html = `<!DOCTYPE html>
+          <html lang="en"><head>
+          <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+            <link href="css/style.css" rel="stylesheet">
+            <title>EXPORT</title>
+          </head>
+          <body>      
+          <div class="export-graphic">
+        `,
+        grid_pos_left = grid_pos.left,
+        grid_pos_top = grid_pos.top,
+        design_elems_offset = {
+          'img1': $('.img1:last-child')[0].getBoundingClientRect(),
+          'img2': $('.img2:last-child')[0].getBoundingClientRect(),
+          'text': $('.text:last-child')[0].getBoundingClientRect()
+        }
+        //console.log(grid_pos_left - design_elems_offset['img1'].left)
+        
+
+
+        $('.design-element').forEach(elem => {
+          let newElem = elem.cloneNode(true),
+              elem_type = elem.getAttribute('data-component');
+
+          // function leftValue(x){
+          //   console.log(x - grid_pos_left - design_elems_offset[elem_type].left);
+
+          //   return 10000
+          // }
+
+          // function topValue(y){
+          //   return (this.y - grid_pos_top - design_elems_offset[elem_type].top);
+          // }
+
+          // gsap.set(newElem, 
+          // { 
+          //   x: leftValue,
+          //   y: topValue
+
+          // }); 
+          console.log(newElem.outerHTML)
+
+          html = html + newElem.outerHTML;
+        });
+
+        html = html + "</div></body></html>"
+        var tab = window.open('about:blank', '_blank');
+        tab.document.write(html); // where 'html' is a variable containing your HTML
+        tab.document.close(); // to finish loading the page
+      });
+      
+    })(window,document);
+
+
+  </script>
+</body>
+</html>

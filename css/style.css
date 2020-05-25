@@ -1,0 +1,176 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+html{
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;    
+}
+body {
+    position: relative;
+}
+.page-heading{
+  font-size: 2vh;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.App{
+  width: 95%;
+  display: flex;
+  max-width: 900px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+.page-elements{
+  width: 300px;
+  order: 1;
+  position: relative;
+  z-index: 20;
+}
+.newElement{
+  
+}
+.page-elements ul{
+  list-style: none;
+}
+.page-elements li{
+  margin-bottom: 20px;
+}
+.text-wrap,
+.img1-wrap,
+.img2-wrap{
+  position: relative;
+  width: 100px;
+  height: 100px;
+  box-sizing: border-box;
+}
+.text,
+.img1, .img2{
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100px;
+  height: 100px;     
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.img1{
+  background-image: url('../images/Image1.png');
+}
+.img2{
+  background-image: url('../images/Image2.png');
+}
+.resize-handle{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0; 
+  height: 0; 
+  border-left: 30px solid transparent;
+  border-top: 30px solid transparent;
+  border-right: 30px solid grey;
+  transform: none !important;
+}
+.composition-component {
+  border: 2px dashed transparent;
+  will-change: border;
+  transition: border 0.3s ease-in-out;
+}
+html .selected-element{
+  border: 2px dashed gray;
+}
+.grid{
+  position: relative;
+  height: 601px;
+  width: 601px;
+  margin-left: -2px;
+  order: 2;
+  z-index: 1;
+  border: 1px solid rgba(0,0,0,0.3);
+  box-sizing: border-box;
+  background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  background-position:-1px -1px, -1px -1px, -1px -1px, -1px -1px;
+  background-image:
+    linear-gradient(rgba(0,0,0,.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,.3) 1px, transparent 1px),
+    linear-gradient(rgba(0,0,0,.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,.1) 1px, transparent 1px);
+}
+
+.btn {
+  border-radius: 5px;
+  padding: 15px 25px;
+  font-size: 22px;
+  text-decoration: none;
+  margin: 20px;
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  outline: none;
+  font-family: inherit;
+  font-weight: 400;
+  border: none;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+.btn:last-child{
+  margin-right: 0;
+}
+.btn:active {
+  transform: translate(0px, 5px);
+  -webkit-transform: translate(0px, 5px);
+  box-shadow: 0px 1px 0px 0px;
+}
+.btn-blue {
+  background-color: #55acee;
+  box-shadow: 0px 5px 0px 0px #3C93D5;
+}
+.btn-blue:hover {
+  background-color: #6FC6FF;
+}
+.btn-green {
+  background-color: #2ecc71;
+  box-shadow: 0px 5px 0px 0px #15B358;
+}
+.btn-green:hover {
+  background-color: #48E68B;
+}
+.btn-red {
+  background-color: #e74c3c;
+  box-shadow: 0px 5px 0px 0px #CE3323;
+}
+.btn-red:hover {
+  background-color: #FF6656;
+}
+
+.buttons-wrap{
+  width: 100%;
+  text-align: right;
+  order: 3;
+}
+
+
+.export-graphic{
+  margin: 20px auto 0;
+  border: 1px solid gray;
+  width: 600px;
+  height: 600px;
+  position: relative;
+}
+.export-graphic .resize-handle{
+  display: none;
+}
+.export-graphic .selected-element{
+  border: none;
+  position: relative;
+}
+.export-graphic .img1{
+  margin: 25px 0 0 -298px;
+}
+.export-graphic .img2{
+  margin: 144.066px 0 0 -298px;
+}
+.export-graphic .text{
+  margin: 264.488px 0 0 -298px;
+}
