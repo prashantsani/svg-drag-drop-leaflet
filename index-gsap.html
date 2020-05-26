@@ -83,8 +83,11 @@
             if( this.target.classList.contains("design-element") ) {
 
             }else {
-              if(this.hitTest($grid, 10)) {
+              if(this.hitTest($grid, 40)) {
                 $grid.classList.add('active'); 
+              }
+              else if(this.hitTest($grid, 0)) {
+                $grid.classList.remove('active'); 
               }
             }
             
