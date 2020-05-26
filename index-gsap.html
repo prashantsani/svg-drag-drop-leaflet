@@ -15,7 +15,7 @@
         <ul class="composition-components">
           <li class="img1-wrap"><div data-component="img1" class="composition-component img1"></div></li>
           <li class="img2-wrap"><div data-component="img2" class="composition-component img2"></div></li>
-          <li class="text-wrap"><p data-component="text" class="composition-component text" contenteditable="true"><span>TEXT</span></p></li>
+          <li class="text-wrap"><p data-component="text" class="composition-component text" contenteditable="true"><span contenteditable="true">TEXT</span></p></li>
         </ul>
       </div>
       <div class="grid"></div>
@@ -99,14 +99,20 @@
                 this.target.classList.add("design-element");
             }
           }, 
+          onDrag: function(){
+            if (this.hitTest($grid, 10)) {
+                $grid.classList.add('active');
+            }
+          },
           onDragEnd: function(){
+            $grid.classList.remove('active');
             this.applyBounds($grid);
           }
         })
 
-        // if($elem.querySelectorAll('[contenteditable]').length>0){
-        //   elem_drag.editable();
-        // }
+        if($elem.querySelectorAll('[contenteditable]').length>0){
+          
+        }
       }
 
       // function onDrag() {
@@ -131,7 +137,7 @@
         
 
         Draggable.create(handle, {
-          bounds: '.grid',
+          bounds: $grid,
           onDrag: function() {    
             console.log(this.x)  
             gsap.to($elem, { transformOrigin: 'right bottom', width: this.x-350, height: this.x-350, duration:0.1 });      

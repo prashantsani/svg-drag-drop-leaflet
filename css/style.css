@@ -89,6 +89,7 @@ html .selected-element{
   z-index: 1;
   border: 1px solid rgba(0,0,0,0.3);
   box-sizing: border-box;
+  transition: border 0.1s ease-in-out, box-shadow 0.3s ease-in-out;
   background-size:100px 100px, 100px 100px, 20px 20px, 20px 20px;
   background-position:-1px -1px, -1px -1px, -1px -1px, -1px -1px;
   background-image:
@@ -97,7 +98,10 @@ html .selected-element{
     linear-gradient(rgba(0,0,0,.1) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0,0,0,.1) 1px, transparent 1px);
 }
-
+.grid.active{
+  border: 1px solid #2ecc71;
+  box-shadow: 0 0 2px #2ecc71;
+}
 .btn {
   border-radius: 5px;
   padding: 15px 25px;
