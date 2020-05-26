@@ -42,8 +42,12 @@
         snapping: false // by default do not snap 
       }
 
-      function setElementSelection(target){
-        if(target.classList.contains("design-element")){
+      function setElementSelection(target, isItFirstDrag){
+        var checkSelection = target.classList.contains("design-element")
+        if(isItFirstDrag){
+          checkSelection = true
+        }
+        if(checkSelection){
           try { $('.selected-element')[0].classList.remove('selected-element')}
           catch (e) {}
           target.classList.add('selected-element');
@@ -58,7 +62,6 @@
         if(elem_type === 'p'){
           newElement.setAttribute('contenteditable', 'true');
           newElement.innerHTML = 'TEXT';
-          console.log($elem)
         }
 
         newElement.setAttribute('class',classNames);
@@ -77,10 +80,17 @@
           // bounds: grid,
           // onDrag: onDrag,
           onDrag: function (){
+            if( this.target.classList.contains("design-element") ) {
+
+            }else {
+              if(this.hitTest($grid, 10)) {
+                $grid.classList.add('active'); 
+              }
+            }
+            
             if(this.target.classList.contains('selected-element')){
               return;
             }
-            setElementSelection(this.target);
           },
           onClick: function (){
             setElementSelection(this.target);
@@ -93,20 +103,16 @@
                 addElement($elem, elem, $parent, elem_type);
                 createResizeable($elem);
                 if(elem_type==='p'){
-                  console.log(this)
                 }
-                
-                this.target.classList.add("design-element");
             }
-          }, 
-          onDrag: function(){
-            if (this.hitTest($grid, 10)) {
-                $grid.classList.add('active');
-            }
+            setElementSelection(this.target, true);
           },
           onDragEnd: function(){
             $grid.classList.remove('active');
             this.applyBounds($grid);
+            if(!this.target.classList.contains("design-element")){
+              this.target.classList.add("design-element");
+            }
           }
         })
 
@@ -223,7 +229,6 @@
           //   y: topValue
 
           // }); 
-          console.log(newElem.outerHTML)
 
           html = html + newElem.outerHTML;
         });

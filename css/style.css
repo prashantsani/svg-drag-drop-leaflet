@@ -71,6 +71,11 @@ body {
   border-top: 30px solid transparent;
   border-right: 30px solid grey;
   transform: none !important;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.selected-element .resize-handle{
+  opacity: 1;
 }
 .composition-component {
   border: 2px dashed transparent;
