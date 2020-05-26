@@ -15,7 +15,7 @@
         <ul class="composition-components">
           <li class="img1-wrap"><div data-component="img1" class="composition-component img1"></div></li>
           <li class="img2-wrap"><div data-component="img2" class="composition-component img2"></div></li>
-          <li class="text-wrap"><p data-component="text" class="composition-component text" contenteditable="true">TEXT</p></li>
+          <li class="text-wrap"><p data-component="text" class="composition-component text" contenteditable="true"><span>TEXT</span></p></li>
         </ul>
       </div>
       <div class="grid"></div>
@@ -58,6 +58,7 @@
         if(elem_type === 'p'){
           newElement.setAttribute('contenteditable', 'true');
           newElement.innerHTML = 'TEXT';
+          console.log($elem)
         }
 
         newElement.setAttribute('class',classNames);
@@ -72,7 +73,7 @@
       }
 
       function createDraggable($elem, elem, $parent, elem_type){
-        Draggable.create($elem, {
+        var elem_drag = Draggable.create($elem, {
           // bounds: grid,
           // onDrag: onDrag,
           onDrag: function (){
@@ -91,12 +92,21 @@
                 // Adding a new Element + making origional one resizable 
                 addElement($elem, elem, $parent, elem_type);
                 createResizeable($elem);
-                //this.applyBounds($grid);
+                if(elem_type==='p'){
+                  console.log(this)
+                }
                 
                 this.target.classList.add("design-element");
             }
+          }, 
+          onDragEnd: function(){
+            this.applyBounds($grid);
           }
         })
+
+        // if($elem.querySelectorAll('[contenteditable]').length>0){
+        //   elem_drag.editable();
+        // }
       }
 
       // function onDrag() {
@@ -126,7 +136,7 @@
             console.log(this.x)  
             gsap.to($elem, { transformOrigin: 'right bottom', width: this.x-350, height: this.x-350, duration:0.1 });      
           }
-        });  
+        });
       }
 
       function setCompositionComponents(elem, elem_type){
